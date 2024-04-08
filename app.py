@@ -23,4 +23,4 @@ def result():
         # Передаємо нове значення у модель для прогнозування
         prediction = model.predict([[number]])[0]
         return render_template('resultsform.html', number=number, predicted_number=int(prediction))
-app.run("localhost", 5000, debug=True)
+app.run()
