@@ -1,26 +1,21 @@
 from flask import Flask, render_template, request
-from sklearn.linear_model import LinearRegression
-import numpy as np
 
-app = Flask(__name__)
+app = Flask('flask1')
 
-# Генеруємо дані для навчання моделі
-X_train = np.arange(1, 11).reshape(-1, 1)  # Перших 10 чисел Фібоначчі
-y_train = np.array([1, 1, 2, 3, 5, 8, 13, 21, 34, 55])  # Відповідні значення
-
-# Навчаємо модель на навчальних даних
-model = LinearRegression()
-model.fit(X_train, y_train)
-
-@app.route("/")
+@app.route('/')
 def show_start_form():
-    return render_template('form.html')
-
-@app.route("/result", methods=['POST'])
+    return render_template('form.html')    
+@app.route('/result', methods=['POST', 'GET'])
 def result():
-    if request.method == 'POST':
-        number = int(request.form['number'])
-        # Передаємо нове значення у модель для прогнозування
-        prediction = model.predict([[number]])[0]
-        return render_template('resultsform.html', number=number, predicted_number=int(prediction))
-app.run()
+#    form=request.form 
+    number = request.form['number']
+    if number is not None:
+        number = int(number)
+        fib = lambda n: fib(n - 1) + fib(n - 2) if n > 1 else n
+        predicted = fib(number)
+        return render_template('resultsform.html', number=number, predicted_number=predicted)
+    else:
+        return "Number parameter is missing."
+
+if __name__ == '__main__':
+    app.run()
